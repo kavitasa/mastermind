@@ -3,66 +3,32 @@ class Game
 
   def initialize
     puts "Game initialized."
-    @sequence = generate_sequence
-    puts sequence.inspect
+    @sequence = Sequence.new
   end
 
   def play_game
     @guess    = ""
-    until win? || quit_game?
+    until sequence.win?(guess) || quit_game?
       print "Enter your guess: "
       @guess = gets.strip.chars
       case
-      when win?
+      when sequence.win?(guess)
         puts "You win."
       when quit_game?
         puts "Game finished."
       else
+        correct_colors = sequence.correct_colors(guess)
+        correct_positions = sequence.correct_positions(guess)
         puts "You have #{correct_colors} colors and #{correct_positions} correct positions."
       end
     end
-    return win?
+    return sequence.win?(guess)
   end
 
   private
 
-  def generate_sequence
-    sequence = []
-    4.times { sequence << %w[r b y g].sample }
-    sequence
-  end
-
-  def win?
-    sequence == guess
-  end
-
   def quit_game?
     guess == ['q']
-  end
-
-  def correct_colors
-    matches            = 0
-    duplicate_sequence = sequence.dup
-
-    guess.each do |color|
-      if duplicate_sequence.include?(color)
-        matches += 1
-        color_index = duplicate_sequence.index(color)
-        duplicate_sequence.delete_at(color_index)
-      end
-    end
-
-    matches
-  end
-
-  def correct_positions
-    matches = 0
-
-    guess.each_with_index do |color, position|
-      matches += 1 if sequence[position] == color
-    end
-
-    matches
   end
 
   # attr_reader :beg_sequence
