@@ -1,21 +1,22 @@
 class Game
-  attr_reader :sequence, :guess
+  attr_reader :sequence, :guess, :printer
 
   def initialize
-    puts "Game initialized."
+    puts "Let's begin!"
     @sequence = Sequence.new
+    @printer = Output.new
   end
 
   def play_game
-    @guess    = ""
+    @guess = []
     until sequence.win?(guess) || quit_game?
-      print "Enter your guess: "
+      printer.enter_guess
       @guess = gets.strip.chars
       case
-      when sequence.win?(guess)
-        puts "You win."
       when quit_game?
-        puts "Game finished."
+        printer.end_game
+      when sequence.win?(guess)
+        printer.win_message
       else
         correct_colors = sequence.correct_colors(guess)
         correct_positions = sequence.correct_positions(guess)
@@ -28,8 +29,25 @@ class Game
   private
 
   def quit_game?
-    guess == ['q']
+    command = guess.join.strip
+    command == "q" || command == "quit"
   end
+
+  # initialize
+  #   secret
+  #   history
+  #def add_guess(guess)
+  #sequence
+  # add_guess
+  # over?
+  # won?
+  # valid_guess?
+  # num_guesses
+  # correct_colors (for some guess)
+    #def correct_colors(guess_number)
+      #guesses[guess_number].correct_colors
+    #end
+  # correct_position (for some guess)
 
   # attr_reader :beg_sequence
 

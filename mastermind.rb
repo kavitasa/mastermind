@@ -1,6 +1,9 @@
 require "./lib/cli"
 require "./lib/game"
 require "./lib/sequence"
+require "./output/output"
 
-app = CLI.new
+printer = Output.new
+
+app = CLI.new(printer)
 app.run
