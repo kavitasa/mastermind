@@ -27,8 +27,6 @@ class Game
 
   def play_round
     @start_time ||= Time.now
-    # if quit?
-    #   printer.end_game
     if won?
       @end_time = Time.now
       printer.win_message(format_guess, guess_counter, elapsed_minutes, elapsed_seconds)
