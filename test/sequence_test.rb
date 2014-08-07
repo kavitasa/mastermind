@@ -26,13 +26,14 @@ class SequenceTest < Minitest::Test
     assert repeats < 25
   end
 
-  def test_secret_code_contains_rgby_letters
+  def test_secret_code_contains_only_rgby_letters
     # other_letters = !Sequence.new.secret_code.include?["r"||"g"|| "b"|| "y"]
     # refute other_letters?
   end
 
-  def test_secret_code_contains_other_letters
-
+  def test_secret_code_is_an_array
+    
+    assert Array, secret_code.class
   end
 
 end

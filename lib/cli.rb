@@ -1,6 +1,6 @@
 class CLI
-  attr_reader :command, :sequence, :printer, :guess_counter  # => nil
-  attr_accessor :start_time                                  # => nil
+  attr_reader :command, :sequence, :printer, :guess_counter
+  attr_accessor :start_time
 
   def initialize(printer)
     @command = ""
@@ -59,4 +59,8 @@ class CLI
   def quit?
     command == "q" || command == "quit"
   end
+end
+
+if __FILE__== $0
+  CLI.run
 end

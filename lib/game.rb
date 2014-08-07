@@ -1,6 +1,6 @@
 class Game
-  attr_reader :sequence, :printer           # => nil
-  attr_accessor :guess, :guess_counter # => nil
+  attr_reader :sequence, :printer
+  attr_accessor :guess, :guess_counter
 
   def initialize(printer)
     @sequence = Sequence.new
@@ -67,7 +67,6 @@ class Game
   def correct_colors
     matches = 0
     duplicate_secret_code = sequence.secret_code.dup
-
     guess.each do |color|
       if duplicate_secret_code.include?(color)
         matches += 1
@@ -75,13 +74,11 @@ class Game
         duplicate_secret_code.delete_at(color_index)
       end
     end
-
     matches
   end
 
   def correct_positions
     matches = 0
-
     guess.each_with_index do |color, position|
       matches += 1 if sequence.secret_code[position] == color
     end
