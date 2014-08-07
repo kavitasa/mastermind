@@ -18,20 +18,32 @@ class CLI
   def play_game
     game = Game.new(printer)
     printer.start_game_play
-    until game.won? || game.quit?
+    until game.won? || quit?
       printer.enter_guess
-      game.store_guess(gets.strip.downcase.chars)
-      if game.quit?
-        printer.end_game
-        exit
-      elsif game.guess_valid?
-        result = game.play_round
-      elsif game.guess_too_short?
-        printer.guess_too_short
-      else
-        printer.guess_too_long
+      @command = gets.strip.downcase
+      game.store_guess(command.chars)
+      case
+        when quit?
+          printer.end_game
+          run
+        when backdoor?
+          game.show_answer
+        when guess_valid?
+          game.play_round
+        when guess_too_short?
+          printer.guess_too_short
+        else
+          printer.guess_too_long
       end
     end
+  end
+
+  def guess_valid?
+    command.length == 4
+  end
+
+  def guess_too_short?
+    command.length < 4
   end
 
   def process_user_commands
@@ -59,8 +71,9 @@ class CLI
   def quit?
     command == "q" || command == "quit"
   end
-end
 
-if __FILE__== $0
-  CLI.run
+  def backdoor?
+    command == "bd" || command == "backdoor"
+  end
+
 end

@@ -17,15 +17,19 @@ class Game
     guess.join.upcase
   end
 
+  def show_answer
+    printer.show_answer(sequence)
+  end
+
   def guess_counter
     @guess_counter += 1
   end
 
   def play_round
     @start_time ||= Time.now
-    if quit?
-      printer.end_game
-    elsif won?
+    # if quit?
+    #   printer.end_game
+    if won?
       @end_time = Time.now
       printer.win_message(format_guess, guess_counter, elapsed_minutes, elapsed_seconds)
       guess_counter
@@ -49,19 +53,6 @@ class Game
 
   def elapsed_seconds
     total_seconds%60
-  end
-
-  def quit?
-    command = guess.join.strip
-    command == "q" || command == "quit"
-  end
-
-  def guess_valid?
-    guess.length == 4
-  end
-
-  def guess_too_short?
-    guess.length < 4
   end
 
   def correct_colors

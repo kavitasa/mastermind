@@ -6,7 +6,7 @@ require './lib/sequence'
 class SequenceTest < Minitest::Test
 
   def test_sequence_exists
-    assert Sequence.new
+    assert  Sequence.new
   end
 
   def test_sequence_has_a_secret_code
@@ -27,13 +27,11 @@ class SequenceTest < Minitest::Test
   end
 
   def test_secret_code_contains_only_rgby_letters
-    # other_letters = !Sequence.new.secret_code.include?["r"||"g"|| "b"|| "y"]
-    # refute other_letters?
+    refute other_letters?
   end
 
   def test_secret_code_is_an_array
-    
-    assert Array, secret_code.class
+    assert Array, Sequence.new.secret_code.class
   end
 
 end

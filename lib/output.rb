@@ -85,4 +85,8 @@ class Output
     puts "Good bye!"
   end
 
+  def show_answer(sequence)
+    puts "The answer is #{sequence.secret_code.join}"
+  end
+
 end
