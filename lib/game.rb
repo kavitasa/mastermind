@@ -4,8 +4,7 @@ class Game
 
   def initialize(printer)
     @sequence = Sequence.new
-    @printer = Output.new
-    # @printer = printer
+    @printer = printer
     @guess = []
     @guess_counter = 0
   end
