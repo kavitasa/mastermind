@@ -1,106 +1,93 @@
 class Game
-  attr_reader :sequence, :guess, :printer
+  attr_reader :sequence, :printer           # => nil
+  attr_accessor :guess, :guess_counter # => nil
 
-  def initialize
-    puts "Let's begin!"
+  def initialize(printer)
     @sequence = Sequence.new
     @printer = Output.new
-  end
-
-  def play_game
+    # @printer = printer
     @guess = []
-    until sequence.win?(guess) || quit_game?
-      printer.enter_guess
-      @guess = gets.strip.chars
-      case
-      when quit_game?
-        printer.end_game
-      when sequence.win?(guess)
-        printer.win_message
-      else
-        correct_colors = sequence.correct_colors(guess)
-        correct_positions = sequence.correct_positions(guess)
-        puts "You have #{correct_colors} colors and #{correct_positions} correct positions."
-      end
-    end
-    return sequence.win?(guess)
+    @guess_counter = 0
   end
 
-  private
+  def store_guess(guess)
+    @guess = guess
+  end
 
-  def quit_game?
+  def format_guess
+    guess.join.upcase
+  end
+
+  def guess_counter
+    @guess_counter += 1
+  end
+
+  def play_round
+    @start_time ||= Time.now
+    if quit?
+      printer.end_game
+    elsif won?
+      @end_time = Time.now
+      printer.win_message(format_guess, guess_counter, elapsed_minutes, elapsed_seconds)
+      guess_counter
+    else
+      printer.round_results(correct_colors, correct_positions)
+      printer.number_of_guesses(guess_counter)
+    end
+  end
+
+  def won?
+    sequence.secret_code == guess
+  end
+
+  def total_seconds
+    (@end_time - @start_time).to_i
+  end
+
+  def elapsed_minutes
+    total_seconds/60
+  end
+
+  def elapsed_seconds
+    total_seconds%60
+  end
+
+  def quit?
     command = guess.join.strip
     command == "q" || command == "quit"
   end
 
-  # initialize
-  #   secret
-  #   history
-  #def add_guess(guess)
-  #sequence
-  # add_guess
-  # over?
-  # won?
-  # valid_guess?
-  # num_guesses
-  # correct_colors (for some guess)
-    #def correct_colors(guess_number)
-      #guesses[guess_number].correct_colors
-    #end
-  # correct_position (for some guess)
+  def guess_valid?
+    guess.length == 4
+  end
 
-  # attr_reader :beg_sequence
+  def guess_too_short?
+    guess.length < 4
+  end
 
-  # def initialize(beg_sequence = "rgby")
-  #   @beg_sequence = beg_sequence
-  # end
-  #
-  # def beg_sequence
-  #   @beg_sequence
-  # end
-  #
-  # p @beg_sequence
+  def correct_colors
+    matches = 0
+    duplicate_secret_code = sequence.secret_code.dup
 
-  # def test_beg_sequence_is_four_letters_long
-  #
-  # end
+    guess.each do |color|
+      if duplicate_secret_code.include?(color)
+        matches += 1
+        color_index = duplicate_secret_code.index(color)
+        duplicate_secret_code.delete_at(color_index)
+      end
+    end
 
-  # def test_beg_sequence_only_contains_rgby
-  #
-  # end
+    matches
+  end
 
-  # def evaluate_guesses_input
-  #   if not 'q', test that guess is 4 charac long
-  #   if fewer than 4 letters, tell them it's too short
-  #   if longer than 4 letters, thell them it's too long
-  # end
-  #
-  # def end_game_if_guess_is_correct
-  #   if they guess the secret sequence, enter the end game flow
-  # end
-  #
-  # def output_if_guess_is_incorrect
-  #
-  # end
-  #
-  # def track_number_of_guesses
-  #
-  # end
-  #
-  # def time_taken_to_guess_correctly
-  #
-  # end
-  #
-  # def evaluate_guess_letter_case
-  #
-  # end
-  #
-  # def correct_guess_letter_case_if_needed
-  #
-  # end
-  #
-  # def guess_input
-  #
-  # end
+  def correct_positions
+    matches = 0
+
+    guess.each_with_index do |color, position|
+      matches += 1 if sequence.secret_code[position] == color
+    end
+
+    matches
+  end
 
 end
