@@ -26,10 +26,6 @@ class SequenceTest < Minitest::Test
     assert repeats < 25
   end
 
-  def test_secret_code_contains_only_rgby_letters
-    refute other_letters?
-  end
-
   def test_secret_code_is_an_array
     assert Array, Sequence.new.secret_code.class
   end
